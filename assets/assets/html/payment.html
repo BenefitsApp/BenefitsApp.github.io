@@ -1,0 +1,43 @@
+<!DOCTYPE html><html>
+<meta name="viewport" content="width=device-width">
+<head><title>RazorPay Web Payment</title></head>
+<body>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+       var amount = window.localStorage["total"]*100;
+       var email = window.localStorage["email"];
+       var contact = window.localStorage["contact"];
+       var options = {
+         "key": "rzp_live_EYWdOtIDJ1ubms",
+          "amount": amount, "currency": "INR",
+          "name": "Wellness Certify",
+          "description": "Payment for the product",
+          "handler": function (response){
+             window.parent.postMessage("SUCCESS","*");      //2
+             alert(response.razorpay_payment_id);
+             alert(response.razorpay_order_id);
+             alert(response.razorpay_signature)
+          },
+          "prefill": {
+             "email":window.localStorage['email'] ,
+             "contact": window.localStorage['contact']
+           },
+          "theme": {
+             "color": "#EF9A9A"
+          },
+          "modal": {
+            "ondismiss": function(){
+               window.parent.postMessage("MODAL_CLOSED","*");   //3
+            }
+          }
+       };
+
+       var rzp1 = new Razorpay(options);
+       window.onload = function(e){  //1
+          rzp1.open();
+          e.preventDefault();
+       }
+
+     </script>
+</body>
+</html>
